@@ -17,8 +17,7 @@ public:
         uint8_t cs_pin,
         uint8_t reset_pin,
         uint8_t dc_pin,
-        uint8_t busy_pin,
-        uint8_t pwr_pin
+        uint8_t busy_pin
     );
     ~DisplayGDEW075T7();
     void refresh(const FrameBuffer *frameBuffer);
@@ -29,12 +28,11 @@ private:
     uint8_t _dcPin;
     uint8_t _csPin;
     uint8_t _busyPin;
-    uint8_t _pwrPin;
     SPIClass *_spi;
 
+    void reset();
     void wakeup();
     void sleep();
-    void setLut(uint8_t cmd, const uint8_t* lut);
     void sendCommand(uint8_t command);
     void sendData(uint8_t data);
     void waitUntilIdle();

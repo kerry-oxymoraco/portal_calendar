@@ -102,7 +102,7 @@ void errorNtpFailed()
 void errorTzLookupFailed()
 {
     error(
-        "TIMEZONE LOOKUP FAILED\n\n"
+        "TIMEZONE LOOKUP LOOKUP FAILED\n\n"
         "Your timezone is either invalid, or the timezone servers "
         "are down. If you configured the timezone servers "
         "yourself, you might have messed something up.\n\n"
@@ -300,13 +300,15 @@ void setup()
         log_i("Toggling showWeather");
         showWeather = !showWeather;
     }
-    // Check if config server is manually started by pressing reset while plugged in
-    else if (wakeupCause == ESP_SLEEP_WAKEUP_UNDEFINED && Config.isOnUsbPower()) {    
+    // Check if config server is manually started by holding BOOT button during reset
+    else if (wakeupCause == ESP_SLEEP_WAKEUP_UNDEFINED && Config.isOnUsbPower()) {
         #ifndef DISABLE_MANUAL_CONFIG_SERVER_ACTIVATION
-        log_i("Config server was manually started");
-        Config.runConfigServer(onSettingsSaved);
-        #else
-        log_i("Config server would have been manually started, but is disabled");
+        if (digitalRead(0) == LOW) {
+            log_i("Config server was manually started");
+            Config.runConfigServer(onSettingsSaved);
+        } else {
+            log_i("Reset detected, running normally");
+        }
         #endif
     }
 
@@ -347,8 +349,6 @@ void setup()
 
     if (scheduledWakeup) {
         log_i("Wakeup is already scheduled");
-        // max with 0 is needed in case the display was updated since the first scheduledWakeup check,
-        // which could make it in the past now despite being in the future before the display update
         deepSleep(max((time_t)0, scheduledWakeup - t));
     }
 

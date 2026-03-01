@@ -255,7 +255,7 @@ DisplayClass::~DisplayClass()
 void DisplayClass::initDisplay()
 {
     if (!_display) {
-        _display = new DisplayGDEW075T7(SPI_BUS, CLK_PIN, DIN_PIN, CS_PIN, RESET_PIN, DC_PIN, BUSY_PIN, PWR_PIN);
+        _display = new DisplayGDEW075T7(SPI_BUS, CLK_PIN, DIN_PIN, CS_PIN, RESET_PIN, DC_PIN, BUSY_PIN);
     }
 }
 
